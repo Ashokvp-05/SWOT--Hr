@@ -1,0 +1,61 @@
+# Swot-HR | Unified Enterprise Governance Spec
+## High-Fidelity Personnel Intelligence Hub
+
+This requirement manifest defines the "Royal Premium" ecosystem architecture and the specialized command centers for each role in the organizational hierarchy.
+
+---
+
+### 🏛️ Core Design Principles (Royal Premium Specification)
+1. **Glassmorphism Aesthetic**: Use semi-transparent backgrounds with backdrop blur (12px-20px) on headers and card elements.
+2. **Standardized Grid Structure**: All data centers (Admin, Auditor, HR Manager) must use the "One True Navbar" with consistent spacing (p-6 to p-10).
+3. **Tactile Micro-interactions**: Every interactive button must have a subtle `:active` scale-95 and `:hover` shadow transition.
+4. **Strong-Color Intelligence**: Every module (Attendance, Leave, Audit) has a designated secondary color theme (Indigo, Emerald, Rose, Amber).
+5. **No Empty States**: All dashboards must render professional loading lattices ("Decrypting Shards...") to ensure a premium load sequence.
+
+---
+
+### 🛡️ Functional Modules & Requirement Shards
+
+#### 1. Root Authority Command (Super Admin)
+**Route: `/admin`**
+*   **Infrastructure Health**: Monitor Docker/DB handshake status in real-time.
+*   **Tenant Monitoring**: Oversee department-level license counts and personnel flow.
+*   **Security Streams**: Immutable audit timeline of platform-wide activity.
+*   **Data Migration Control**: Strategic management of organizational structural changes.
+
+#### 2. Compliance & Forensic Hub (Auditor)
+**Route: `/auditor`**
+*   **Activity Shards**: Forensic visibility into system access and policy modifications.
+*   **Integrity Dashboard**: Pulse check on "Labor Law Compliance" and "Data Integrity Matrix."
+*   **Report Generation**: Dynamic generation of governance integrity manifests.
+*   **Oversight Sync**: Real-time status indicators (Live) for monitoring organization-wide activity.
+
+#### 3. Strategic Management Terminal (HR Manager / Manager)
+**Route: `/manager`**
+*   **Workforce Architecture**: Visualization of cross-departmental personnel.
+*   **Attendance Diagnostics**: Pulse tracking of physical/remote attendance ratios.
+*   **Leave Center**: Centralized hub for processing leave inventory.
+*   **Performance Kudos**: Strategic monitoring of KPI-based performance scores.
+
+#### 4. Personnel Self-Service Hub (Employee)
+**Route: `/employee`**
+*   **Attendance Terminal**: Dual-mode (Office/Remote) clock-in switch.
+*   **Leave Inventory**: Visibility into earned/used leave cycles.
+*   **Personal Performance Analytics**: Employee-level KPI visibility and self-audit tools.
+*   **Kudos Stream**: Social recognition and team interaction log.
+
+#### 5. Operational Shards (Common Shared Services)
+*   **Support Admin Center**: Strategic ticket management and system helpdesk.
+*   **Governance Matrix**: Role-based access control (RBAC) synchronization across 6 distinct identities.
+*   **Payroll Intelligence**: Relational mapping of attendance history to fiscal cycles.
+
+---
+
+### 💻 Technical Infrastructure Checklist
+- [x] **Next.js 16 (Turbopack)**: High-speed frontend compilation.
+- [x] **NextAuth v5 (Beta)**: Enterprise session management.
+- [x] **Prisma / PostgreSQL**: Relational PERSONNEL data integrity.
+- [x] **Lucide + Framer Motion**: Aesthetic iconography & high-fidelity animations.
+- [x] **Tailwind CSS (Vibrant Modes)**: Consistent HSL-based color tokens across all themes.
+
+© 2026 Rudratic Technologies HR Management System. All rights reserved.
