@@ -45,6 +45,7 @@ import {
     ShieldCheck,
     Ticket,
     TrendingUp,
+    UserMinus,
     UserPlus,
     Users,
     XCircle,
@@ -70,22 +71,8 @@ import { Button } from "@/components/ui/button"
 
 const getBasicItems = (role?: string) => {
     const r = role?.toUpperCase()
-    if (r === "MANAGER" || r === "HR" || r === "HR_MANAGER") {
-        return [
-            { name: "Dashboard", href: "/manager?tab=dashboard" },
-            { name: "Attendance", href: "/manager?tab=attendance" },
-            { name: "Leave", href: "/manager?tab=leaves" },
-            { name: "Performance", href: "/manager?tab=performance" },
-            { name: "Reports", href: "/manager?tab=reports" },
-        ]
-    }
-    if (r === "SUPPORT_ADMIN" || r === "SUPPORT") {
-        return [
-            { name: "Support Hub", href: "/support?tab=dashboard" },
-            { name: "Ticket Registry", href: "/support?tab=tickets" },
-            { name: "KB / Issues", href: "/support?tab=issues" },
-            { name: "Profile", href: "/profile" },
-        ]
+    if (r === "MANAGER" || r === "HR" || r === "HR_MANAGER" || r === "AUDITOR" || r === "SUPPORT" || r === "SUPPORT_ADMIN") {
+        return []
     }
     if (r === "ADMIN" || r === "COMPANY_ADMIN" || r === "SUPER_ADMIN") {
         return [
@@ -105,25 +92,6 @@ const getBasicItems = (role?: string) => {
     ]
 }
 
-const managerDropdownItems = [
-    { name: "Dashboard", href: "/manager", icon: LayoutDashboard },
-    { name: "Onboarding", href: "/manager?tab=onboarding", icon: UserPlus },
-    { name: "Attendance", href: "/manager?tab=attendance", icon: Clock },
-    { name: "Leave Approvals", href: "/manager?tab=leaves", icon: CalendarCheck },
-    { name: "Payroll", href: "/manager?tab=payroll", icon: Banknote },
-    { name: "Performance", href: "/manager?tab=performance", icon: TrendingUp },
-    { name: "Documents", href: "/manager?tab=documents", icon: FileText },
-    { name: "HR Reports", href: "/manager?tab=reports", icon: BarChart3 },
-]
-
-const auditorDropdownItems = [
-    { name: "Audit Console", href: "/auditor", icon: ShieldCheck },
-    { name: "Activity Logs", href: "/auditor?tab=logs", icon: History },
-    { name: "Compliance Monitoring", href: "/auditor?tab=compliance", icon: SearchCheck },
-    { name: "Data Integrity", href: "/auditor?tab=verification", icon: Database },
-    { name: "Audit Archive", href: "/auditor?tab=reports", icon: Archive },
-]
-
 const adminDropdownItems = [
     { name: "Executive Hub", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Organization Control", href: "/admin/organization", icon: Building2 },
@@ -136,8 +104,7 @@ const adminDropdownItems = [
 const getRoleDropdown = (role?: string) => {
     const r = role?.toUpperCase()
     if (!r) return null
-    if (r === "MANAGER" || r === "HR" || r === "HR_MANAGER") return null
-    if (r === "AUDITOR") return { label: "Compliance Console", items: auditorDropdownItems }
+    if (r === "MANAGER" || r === "HR" || r === "HR_MANAGER" || r === "AUDITOR" || r === "SUPPORT" || r === "SUPPORT_ADMIN") return null
     if (r === "ADMIN" || r === "COMPANY_ADMIN" || r === "SUPER_ADMIN") return { label: "Governance Portal", items: adminDropdownItems }
     return null
 }

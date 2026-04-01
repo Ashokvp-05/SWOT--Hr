@@ -755,7 +755,7 @@ model ApprovalStep {
   createdAt    DateTime      @default(now()) @map("created_at")
   approver     User          @relation(fields: [approverId], references: [id])
   expenseClaim ExpenseClaim  @relation(fields: [claimId], references: [id], onDelete: Cascade, map: "approval_steps_expense_claim_fk")
-  expenseClaim SalaryAdvance @relation(fields: [claimId], references: [id], onDelete: Cascade, map: "approval_steps_expense_claim_fk")
+  salaryAdvance SalaryAdvance? @relation(fields: [claimId], references: [id], onDelete: Cascade, map: "approval_steps_salary_advance_fk")
 
   @@map("approval_steps")
 }

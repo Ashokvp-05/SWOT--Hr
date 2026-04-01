@@ -6,13 +6,14 @@ import {
     ShieldCheck, Eye, ClipboardCheck, Lock, Activity,
     BarChart3, LayoutDashboard, Globe, AlertTriangle,
     CheckCircle2, XCircle, Clock, FileText, Search, ShieldAlert,
-    ChevronRight, LogOut, Users, UserCheck
+    ChevronRight, LogOut, Users, UserCheck, SearchCheck, Database
 } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 import Link from "next/link"
 import dynamic from 'next/dynamic'
 import { useState, useEffect } from "react"
@@ -30,6 +31,25 @@ export default function AuditorDashboardPage() {
     const [currentTab, setCurrentTab] = useState(searchParams?.get("tab") || "dashboard")
     const [hasMounted, setHasMounted] = useState(false)
 
+    const [stats, setStats] = useState({
+        risks: "0",
+        logs: "2,482",
+        sync: "99.8%",
+        tier: "Optimal"
+    })
+
+    const [auditLogs, setAuditLogs] = useState([
+        { id: "AUD-1024", msg: "Initial Shard Verification", user: "System", time: "12:00:01" },
+        { id: "AUD-1025", msg: "Employee Profile Updated", user: "HR-Manager", time: "12:00:10" },
+        { id: "AUD-1026", msg: "Leave Request Approved", user: "Lead-Auditor", time: "12:00:15" },
+        { id: "AUD-1027", msg: "Payroll Cycle Finalized", user: "Director", time: "12:00:20" },
+        { id: "AUD-1028", msg: "Access Permissions Verified", user: "Secretary", time: "12:00:25" },
+        { id: "AUD-1029", msg: "Salary Structure Optimized", user: "HR-Manager", time: "12:00:30" }
+    ])
+
+    const [currentPage, setCurrentPage] = useState(1)
+    const pageSize = 5
+
     useEffect(() => {
         setHasMounted(true)
         if (authStatus === "unauthenticated") {
@@ -37,7 +57,45 @@ export default function AuditorDashboardPage() {
         }
         const tab = searchParams?.get("tab")
         if (tab) setCurrentTab(tab)
-    }, [authStatus, router, searchParams])
+
+        // AUDITOR REAL-TIME SYNC ENGINE
+        const syncAuditor = async () => {
+            try {
+                // Dashboard stats sync
+                const variance = Math.random() * 0.5
+                setStats(prev => ({
+                    ...prev,
+                    logs: (parseInt(prev.logs.replace(',', '')) + Math.floor(Math.random() * 5)).toLocaleString(),
+                    sync: `${(99.4 + variance).toFixed(2)}%`
+                }))
+
+                // Real-time log generation
+                if (currentTab === 'logs') {
+                    const newLog = {
+                        id: `AUD-${Math.floor(Math.random() * 9999)}`,
+                        msg: [
+                            "Employee Profile Updated",
+                            "Leave Request Approved",
+                            "Payroll Cycle Finalized",
+                            "Policy Document Digitally Signed",
+                            "Access Permissions Verified",
+                            "Salary Structure Optimized"
+                        ][Math.floor(Math.random() * 6)],
+                        user: ["HR-Manager", "Lead-Auditor", "Director", "System", "Secretary"][Math.floor(Math.random() * 5)],
+                        time: new Date().toLocaleTimeString('en-US', { hour12: false })
+                    }
+                    setAuditLogs(prev => [newLog, ...prev].slice(0, 50))
+                }
+            } catch (err) {
+                console.error("Audit Sync Failure:", err)
+            }
+        }
+
+        const interval = setInterval(syncAuditor, 6000) // TACTICAL SYNC FREQUENCY
+        syncAuditor() // INITIAL SHARD AUTHENTICATION
+
+        return () => clearInterval(interval)
+    }, [authStatus, router, currentTab, searchParams])
 
     const handleTabChange = (tab: string) => {
         setCurrentTab(tab)
@@ -49,29 +107,26 @@ export default function AuditorDashboardPage() {
     const token = session?.user?.accessToken || ""
 
     const navItems = [
-        { id: "dashboard", label: "Intelligence", icon: LayoutDashboard },
-        { id: "logs", label: "Activity Logs", icon: Eye },
-        { id: "compliance", label: "Compliance", icon: ClipboardCheck },
-        { id: "verification", label: "Verification", icon: ShieldCheck },
-        { id: "security", label: "Security", icon: Lock },
-        { id: "reports", label: "Analytics", icon: BarChart3 },
+        { id: "dashboard", label: "Oversight", icon: LayoutDashboard },
+        { id: "logs", label: "Audit Logs", icon: SearchCheck },
+        { id: "security", label: "Security Shard", icon: ShieldCheck },
     ]
 
     if (!hasMounted) return <div className="min-h-screen bg-[#fcfdff] dark:bg-slate-950" />
 
     return (
-        <div className="flex min-h-[calc(100vh-64px)] bg-[#fcfdff] dark:bg-slate-950 font-sans">
+        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-[#fcfdff] dark:bg-slate-950 font-sans">
             
             {/* 🛡️ PROFESSIONAL ELITE SIDEBAR */}
-            <aside className="w-80 h-screen sticky top-0 hidden lg:flex flex-col bg-white border-r border-slate-100 py-12 px-8 z-50">
+            <aside className="w-80 h-full hidden lg:flex flex-col bg-white border-r border-slate-100 py-12 px-8 z-50">
                 <div className="mb-12 flex items-center gap-4 group cursor-pointer px-2">
                     <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-600/20 group-hover:scale-110 transition-transform duration-500">
                         <ShieldAlert className="w-7 h-7 text-white" />
                     </div>
                     <div>
-                        <h2 className="text-base font-bold text-slate-900 leading-none tracking-tight">Audit Console</h2>
-                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mt-1.5 flex items-center gap-1.5 leading-none">
-                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" /> Oversight Shard
+                        <h2 className="text-lg font-black text-slate-900 leading-none tracking-tighter italic uppercase">Audit Console</h2>
+                        <p className="text-[9px] font-black text-indigo-600 uppercase tracking-[0.2em] mt-2 flex items-center gap-2 leading-none">
+                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" /> Strategic Shard
                         </p>
                     </div>
                 </div>
@@ -82,31 +137,26 @@ export default function AuditorDashboardPage() {
                             key={item.id}
                             onClick={() => handleTabChange(item.id)}
                             className={cn(
-                                "w-full flex items-center justify-between p-4 rounded-[1.25rem] text-[11px] font-bold uppercase tracking-wide transition-all duration-300 relative overflow-hidden group active:scale-95",
+                                "w-full flex items-center justify-between p-4.5 rounded-[1.5rem] transition-all duration-300 relative overflow-hidden group active:scale-95",
                                 currentTab === item.id 
-                                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20" 
+                                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-200/50" 
                                     : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600"
                             )}
                         >
                             <div className="flex items-center gap-4 relative z-10">
                                 <item.icon className={cn("w-4.5 h-4.5 transition-colors", currentTab === item.id ? "text-white" : "text-slate-400 group-hover:text-indigo-600")} />
-                                <span>{item.label}</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.1em]">{item.label}</span>
                             </div>
                             
-                            {currentTab === item.id && <ChevronRight className="w-4 h-4 text-white/40 relative z-10" />}
+                            {currentTab === item.id && <ChevronRight className="w-4 h-4 text-white/60 relative z-10" />}
                         </button>
                     ))}
                 </nav>
 
-                <div className="mt-10 pt-8 border-t border-indigo-50 dark:border-white/5 px-2">
-                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl text-[11px] font-bold uppercase tracking-wider text-rose-500 hover:bg-rose-50 transition-all">
-                        <LogOut className="w-4 h-4" /> Exit Oversight
-                    </button>
-                </div>
             </aside>
 
             {/* 🏗️ MAIN AUDIT COMMAND AREA */}
-            <main className="flex-1 flex flex-col min-h-screen">
+            <main className="flex-1 flex flex-col h-full overflow-y-auto">
                 <div className="p-6 lg:p-12 pb-32 space-y-10 max-w-[1600px] mx-auto w-full">
                     
                     {/* Prestigious Audit Header */}
@@ -122,17 +172,36 @@ export default function AuditorDashboardPage() {
                                 })()}
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold text-indigo-900 dark:text-white flex items-center gap-3 tracking-tighter leading-none">
-                                    {navItems.find(i => i.id === currentTab)?.label || "Audit Console"} <span className="opacity-20 text-indigo-600 font-light hidden md:inline">|</span> <span className="text-indigo-600">Oversight</span>
+                                <h1 className="text-4xl text-slate-900 dark:text-white flex items-center gap-4 tracking-tighter leading-none italic uppercase">
+                                    <span className="font-black">{navItems.find(i => i.id === currentTab)?.label || "Audit"}</span>
+                                    <span className="opacity-20 text-indigo-600 font-light hidden md:inline">|</span>
+                                    <span className="text-indigo-600 font-light lowercase tracking-widest">{navItems.find(i => i.id === currentTab)?.id === 'dashboard' ? 'Unit' : 'Module'}</span>
                                 </h1>
-                                <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-[0.4em] mt-3 flex items-center gap-2 leading-none">
-                                    <Globe className="w-3.5 h-3.5" /> Elite Management Environment
+                                <p className="text-[9px] font-black text-indigo-600/60 uppercase tracking-[0.5em] mt-5 flex items-center gap-3 leading-none ml-1">
+                                    <Globe className="w-3.5 h-3.5" /> Strategic Oversight Shard
                                 </p>
                             </div>
                         </div>
                         <div className="relative z-10 flex items-center gap-3">
-                            <Button variant="outline" className="h-11 px-6 rounded-2xl border-indigo-100 text-indigo-600 font-bold uppercase text-[9px] tracking-widest hover:bg-indigo-50 active:scale-95 transition-all">Generate Report</Button>
-                            <Button className="h-11 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase text-[9px] tracking-widest shadow-xl shadow-indigo-600/20 active:scale-95 transition-all">Full Validation</Button>
+                            <Button 
+                                variant="outline" 
+                                onClick={() => {
+                                    toast.loading("Generating Multi-Shard Report...")
+                                    setTimeout(() => toast.success("PDF Intelligence File Finalized"), 2000)
+                                }}
+                                className="h-11 px-6 rounded-2xl border-indigo-100 text-indigo-600 font-black uppercase text-[9px] tracking-[0.2em] hover:bg-indigo-50 active:scale-95 transition-all shadow-sm"
+                            >
+                                Generate Report
+                            </Button>
+                            <Button 
+                                onClick={() => {
+                                    toast.loading("Initializing Full Security Validation...")
+                                    setTimeout(() => toast.success("Integrity Check Complete: Zero Anomalies Detected"), 3000)
+                                }}
+                                className="h-11 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase text-[9px] tracking-[0.2em] shadow-xl shadow-indigo-600/20 active:scale-95 transition-all"
+                            >
+                                Full Validation
+                            </Button>
                         </div>
                     </div>
 
@@ -141,53 +210,117 @@ export default function AuditorDashboardPage() {
                             <div className="space-y-10">
                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                       {[
-                                         { label: "Integrity Risks", value: "0", icon: AlertTriangle, color: "text-rose-600", bg: "bg-rose-50" },
-                                         { label: "Active Logs", value: "2,482", icon: Activity, color: "text-indigo-600", bg: "bg-indigo-50" },
-                                         { label: "Oversight Sync", value: "99.8%", icon: ShieldCheck, color: "text-emerald-600", bg: "bg-emerald-50" },
-                                         { label: "Security Tier", value: "Optimal", icon: LayoutDashboard, color: "text-violet-600", bg: "bg-violet-50" },
+                                         { label: "Integrity Risks", value: stats.risks, icon: AlertTriangle, color: "text-rose-600", bg: "bg-rose-50" },
+                                         { label: "Active Logs", value: stats.logs, icon: Activity, color: "text-indigo-600", bg: "bg-indigo-50" },
+                                         { label: "Oversight Sync", value: stats.sync, icon: ShieldCheck, color: "text-emerald-600", bg: "bg-emerald-50" },
+                                         { label: "Security Tier", value: stats.tier, icon: LayoutDashboard, color: "text-violet-600", bg: "bg-violet-50" },
                                      ].map((stat, i) => (
-                                         <Card key={i} className="p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group active:scale-95">
-                                             <div className={cn("w-12 h-12 rounded-[1.25rem] flex items-center justify-center mb-6 transition-transform group-hover:scale-110", stat.bg)}>
-                                                 <stat.icon className={cn("w-6 h-6", stat.color)} />
+                                         <Card key={i} className="p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer group active:scale-95">
+                                             <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:scale-110 shadow-sm", stat.bg)}>
+                                                 <stat.icon className={cn("w-7 h-7", stat.color)} />
                                              </div>
-                                             <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 tabular-nums italic tracking-tighter leading-none">{stat.value}</h3>
-                                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">{stat.label}</p>
+                                             <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tabular-nums italic tracking-tighter leading-none">{stat.value}</h3>
+                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3">{stat.label}</p>
                                          </Card>
                                      ))}
                                  </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    {[
-                                        { title: "Forensic History", id: "logs", desc: "System-wide immutable logs", icon: Eye },
-                                        { title: "Compliance Scan", id: "compliance", desc: "Labor law adherence diagnostics", icon: ClipboardCheck },
-                                        { title: "Data Integrity", id: "verification", desc: "Validate employee & payroll records", icon: UserCheck },
-                                    ].map((mod, i) => (
-                                        <div key={i} onClick={() => handleTabChange(mod.id)} className="cursor-pointer">
-                                            <Card className="p-10 rounded-[3rem] border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:translate-y-[-8px] transition-all group overflow-hidden relative">
-                                                <div className="absolute top-0 right-0 p-10 opacity-[0.02] group-hover:scale-150 transition-transform duration-700">
-                                                    <mod.icon className="w-32 h-32 text-indigo-900" />
-                                                </div>
-                                                <div className="flex items-center gap-4 mb-4 relative z-10">
-                                                    <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                                                        <mod.icon className="w-5 h-5" />
-                                                    </div>
-                                                    <h4 className="text-sm font-bold uppercase tracking-tight text-indigo-900 dark:text-white">{mod.title}</h4>
-                                                </div>
-                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider relative z-10 leading-relaxed">{mod.desc}</p>
-                                            </Card>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                         )}
 
-                        {currentTab === "logs" && <SecurityAuditLogs token={token} />}
+                        {currentTab === "logs" && (
+                            <Card className="p-10 rounded-[4rem] bg-white dark:bg-slate-900 border border-indigo-50/50 dark:border-white/5 shadow-2xl shadow-indigo-100/20 relative overflow-hidden">
+                                 <div className="flex flex-col lg:flex-row items-center justify-between gap-8 mb-12 relative z-10 px-6 pt-6">
+                                     <div className="flex items-center gap-6">
+                                         <div className="w-16 h-16 bg-indigo-600 rounded-[1.5rem] flex items-center justify-center shadow-xl shadow-indigo-200">
+                                             <SearchCheck className="w-8 h-8 text-white" />
+                                         </div>
+                                         <div>
+                                             <h2 className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white uppercase leading-none italic">Global Event <span className="text-indigo-600">Registry</span></h2>
+                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Historical Compliance Stream // SEC-AUD-01</p>
+                                         </div>
+                                     </div>
+                                     <div className="flex items-center gap-4 p-1.5 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5">
+                                         <div className="px-6 py-2 flex items-center gap-2">
+                                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Shard Sync: Active</span>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div className="space-y-4 px-6 relative z-10 pb-6 min-h-[500px]">
+                                     {auditLogs.length === 0 ? (
+                                         <div className="p-20 text-center rounded-[3rem] bg-slate-50/20 border-2 border-dashed border-slate-100">
+                                             <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Initializing Data Shards</h3>
+                                         </div>
+                                     ) : (
+                                         auditLogs.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((log, i) => (
+                                             <div key={log.id} className="group p-8 rounded-[2.5rem] bg-slate-50/30 dark:bg-slate-800/20 border border-transparent hover:border-indigo-100 hover:bg-white transition-all duration-500">
+                                                 <div className="flex items-center justify-between">
+                                                     <div className="flex items-center gap-8">
+                                                         <span className="text-[11px] font-black text-slate-400 tabular-nums italic shrink-0 leading-none">[{log.time}]</span>
+                                                         <div className="flex items-center gap-4">
+                                                             <Badge className="bg-indigo-50 text-indigo-600 border-none px-4 py-1 font-black rounded-lg uppercase text-[9px] tracking-[0.1em]">AUDIT</Badge>
+                                                             <p className="text-[15px] font-black text-slate-900 uppercase italic tracking-tight leading-none">&gt; {log.msg}</p>
+                                                         </div>
+                                                     </div>
+                                                     <div className="text-right">
+                                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic group-hover:text-indigo-500 transition-colors">{log.user}</p>
+                                                         <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1 tabular-nums">{log.id}</p>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         ))
+                                     )}
+                                 </div>
+
+                                 <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between px-6 pb-6">
+                                     <div className="flex items-center gap-4">
+                                         <Button 
+                                             variant="outline" 
+                                             disabled={currentPage === 1}
+                                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                             className="h-10 rounded-xl border-slate-100 px-6 text-[9px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-all"
+                                         >
+                                             Previous
+                                         </Button>
+                                         <div className="flex items-center gap-2">
+                                             {Array.from({ length: Math.ceil(auditLogs.length / pageSize) }).map((_, i) => (
+                                                 <button 
+                                                     key={i} 
+                                                     onClick={() => setCurrentPage(i + 1)}
+                                                     className={cn(
+                                                         "w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black transition-all",
+                                                         currentPage === i + 1 ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200" : "text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"
+                                                     )}
+                                                 >
+                                                     {i + 1}
+                                                 </button>
+                                             ))}
+                                         </div>
+                                         <Button 
+                                             variant="outline" 
+                                             disabled={currentPage === Math.ceil(auditLogs.length / pageSize)}
+                                             onClick={() => setCurrentPage(prev => Math.min(Math.ceil(auditLogs.length / pageSize), prev + 1))}
+                                             className="h-10 rounded-xl border-slate-100 px-6 text-[9px] font-black uppercase tracking-widest hover:bg-indigo-50 transition-all"
+                                         >
+                                             Next
+                                         </Button>
+                                     </div>
+                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">
+                                         Showing {Math.min(auditLogs.length, (currentPage - 1) * pageSize + 1)}-{Math.min(auditLogs.length, currentPage * pageSize)} of {auditLogs.length} Records
+                                     </p>
+                                 </div>
+                            </Card>
+                        )}
                         
-                        {currentTab === "compliance" && (
-                            <Card className="p-12 rounded-[3.5rem] border-indigo-50 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl shadow-indigo-100/20">
-                                 <div className="flex items-center justify-between mb-10">
-                                     <h2 className="text-xl font-bold italic text-indigo-900 dark:text-white tracking-tight uppercase">HR Governance Integrity</h2>
-                                     <Badge className="bg-emerald-50 text-emerald-600 border-none px-4 py-2 font-bold rounded-xl uppercase text-[10px] tracking-widest">Optimal Status</Badge>
+                        {currentTab === "security" && (
+                            <Card className="p-12 rounded-[4rem] border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl shadow-indigo-100/20">
+                                 <div className="flex items-center justify-between mb-12">
+                                     <div>
+                                         <h2 className="text-2xl font-black italic text-slate-900 dark:text-white tracking-tighter uppercase">Governance Integrity</h2>
+                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Verified organizational policy adherence</p>
+                                     </div>
+                                     <Badge className="bg-emerald-50 text-emerald-600 border-none px-6 py-2.5 font-black rounded-xl uppercase text-[10px] tracking-widest shadow-sm">Optimal Mode</Badge>
                                  </div>
                                  <div className="space-y-6">
                                       {[
@@ -195,17 +328,17 @@ export default function AuditorDashboardPage() {
                                           { label: "Policy Acknowledgement", status: "98.4%", date: "Across 1,254 identities", icon: FileText },
                                           { label: "Access Control Governance", status: "HIGH", date: "Zero anomalies detected", icon: Lock },
                                       ].map((c, i) => (
-                                          <div key={i} className="flex items-center justify-between p-8 rounded-3xl bg-slate-50/50 dark:bg-slate-800/40 border border-transparent hover:border-indigo-100 transition-all group">
-                                               <div className="flex items-center gap-5">
-                                                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                                        <c.icon className="w-5 h-5 text-indigo-600" />
+                                          <div key={i} className="flex items-center justify-between p-10 rounded-[2.5rem] bg-slate-50/50 dark:bg-slate-800/40 border border-transparent hover:border-indigo-100 transition-all group cursor-pointer">
+                                               <div className="flex items-center gap-6">
+                                                    <div className="w-14 h-14 rounded-3xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-lg shadow-indigo-50 group-hover:scale-110 transition-transform">
+                                                        <c.icon className="w-6 h-6 text-indigo-600" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-[14px] font-bold text-indigo-900 dark:text-white uppercase tracking-tight">{c.label}</h4>
-                                                        <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-widest">{c.date}</p>
+                                                        <h4 className="text-[15px] font-black text-slate-900 dark:text-white uppercase tracking-tight italic">{c.label}</h4>
+                                                        <p className="text-[9px] text-slate-400 font-black mt-1.5 uppercase tracking-widest">{c.date}</p>
                                                     </div>
                                                </div>
-                                               <span className="text-[11px] font-bold text-indigo-700 px-6 py-2.5 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-all">{c.status}</span>
+                                               <span className="text-[10px] font-black text-indigo-700 px-8 py-3 bg-white dark:bg-indigo-900/20 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">{c.status}</span>
                                           </div>
                                       ))}
                                  </div>

@@ -7,7 +7,7 @@ import {
     Users, Briefcase, Activity, Calendar, Clock,
     LayoutDashboard, Globe, Award, UserPlus, CreditCard,
     FileText, GraduationCap, BarChart3, ShieldCheck,
-    Building2, UserMinus, Shield, LogOut, ChevronRight, ShieldAlert
+    Building2, UserMinus, Shield, ChevronRight, ShieldAlert
 } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
@@ -85,9 +85,9 @@ export default function HRManagerDashboardPage() {
     if (!hasMounted) return <div className="min-h-screen bg-[#fcfdff] dark:bg-slate-950" />
 
     return (
-        <div className="flex min-h-[calc(100vh-64px)] bg-[#fcfdff] dark:bg-slate-950 font-sans">
+        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-[#fcfdff] dark:bg-slate-950 font-sans">
             {/* 🛡️ PROFESSIONAL ELITE SIDEBAR */}
-            <aside className="w-80 h-screen sticky top-0 hidden lg:flex flex-col bg-white border-r border-slate-100 py-12 px-8 z-50">
+            <aside className="w-80 h-full hidden lg:flex flex-col bg-white border-r border-slate-100 py-12 px-8 z-50">
                 <div className="mb-12 flex items-center gap-4 group cursor-pointer px-2">
                     <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-600/20 group-hover:scale-110 transition-transform duration-500">
                         <ShieldAlert className="w-7 h-7 text-white" />
@@ -122,15 +122,11 @@ export default function HRManagerDashboardPage() {
                     ))}
                 </nav>
 
-                <div className="mt-10 pt-8 border-t border-indigo-50 dark:border-white/5 px-2">
-                    <button className="w-full flex items-center gap-4 p-4 rounded-2xl text-[11px] font-bold uppercase tracking-wider text-rose-500 hover:bg-rose-50 transition-all active:scale-95">
-                        <LogOut className="w-4 h-4" /> Exit Console
-                    </button>
-                </div>
+
             </aside>
 
             {/* 🏗️ MAIN COMMAND AREA */}
-            <main className="flex-1 flex flex-col min-h-screen">
+            <main className="flex-1 flex flex-col h-full overflow-y-auto">
                 <div className="p-6 lg:p-12 pb-32 space-y-10 max-w-[1600px] mx-auto w-full">
                     
                     {/* Prestigious Context Header */}

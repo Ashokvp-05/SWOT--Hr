@@ -3,8 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* Performance Optimizations */
 
-  // Standalone output for Docker optimization
-  // output: 'standalone', // Disabled for local 'next start' compatibility
+  // Standalone output for Docker/IIS optimization
+  output: 'standalone', 
 
   // Compress output for faster loading
   compress: true,
